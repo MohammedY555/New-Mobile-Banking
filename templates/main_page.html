@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Operations</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Стили для всплывающего окна */
+         #addUserForm {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        width: 300px;
+    }
+
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+    }
+
+    #addUserForm label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    #addUserForm input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+    #addUserForm button {
+        background-color: #008000;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    #addUserForm button:hover {
+        background-color: #006400;
+    }
+
+        /* Стили для всплывающего окна удаления пользователя */
+        #deleteUserForm {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        width: 300px;
+    }
+
+    #deleteUserOverlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+    }
+
+    #deleteUserForm label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    #deleteUserForm input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+    #deleteUserForm button {
+        background-color: #ff0000;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    #deleteUserForm button:hover {
+        background-color: #8b0000;
+    }
+
+        /* Стили для всплывающего окна создания банковского счета */
+     #createAccountForm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            width: 300px;
+        }
+
+        #createAccountOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        #createAccountForm label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #createAccountForm input,
+        #createAccountForm select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        #createAccountForm button {
+            background-color: #008000;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #createAccountForm button:hover {
+            background-color: #006400;
+        }
+
+    /* Стили для всплывающего окна удаления банковского счета */
+    #deleteAccountForm {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        width: 300px;
+    }
+
+    #deleteAccountOverlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+    }
+
+    #deleteAccountForm label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    #deleteAccountForm input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+    #deleteAccountForm button {
+        background-color: #ff0000;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    #deleteAccountForm button:hover {
+        background-color: #cc0000;
+    }
+
+
+
+ /* Стили для всплывающего окна пополнения банковского счета */
+#depositForm {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    width: 300px;
+}
+
+#depositFormOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+#depositForm label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#depositForm input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#depositForm button {
+    background-color: #008000;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#depositForm button:hover {
+    background-color: #006400;
+}
+
+        /* Стили для всплывающего окна снятия средств с банковского счета */
+#withdrawForm {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    width: 300px;
+}
+
+    #withdrawFormOverlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+    }
+
+    #withdrawForm label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    #withdrawForm input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+    #withdrawForm button {
+        background-color: #FF0000;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    #withdrawForm button:hover {
+        background-color: #8B0000;
+    }
+
+/* Стили для всплывающего окна трансфера между банковскими счетами */
+#transferForm {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    width: 300px;
+}
+
+#transferFormOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+#transferForm label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#transferForm input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#transferForm button {
+    background-color: #000080;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#transferForm button:hover {
+    background-color: #000066;
+}
+
+    </style>
+</head>
+<body>
+<h1>Bank Operations</h1>
+<table>
+    <tr>
+        <th>Operation</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>1.</td>
+        <td><a href="#" onclick="toggleAddUserForm()">Adding new clients<clients></clients></a></td>
+    </tr>
+    <tr>
+        <td>2.</td>
+        <td><a href="{{ url_for('users') }}">Getting a list of clients</a></td>
+    </tr>
+
+    <tr>
+        <td>3.</td>
+        <td><a href="#" onclick="toggleDeleteUserForm()">Removing clients</a></td>
+    </tr>
+    <tr>
+        <td>1.</td>
+        <td><a href="#" onclick="toggleCreateAccountForm()">Creating bank accounts</a></td>
+    </tr>
+    <tr>
+        <td>5.</td>
+        <td><a href="{{ url_for('accounts') }}">Getting a list of bank accounts</a></td>
+    </tr>
+    <tr>
+        <td>6.</td>
+        <td><a href="#" onclick="toggleDeleteAccountForm()">Deleting bank accounts</a></td>
+    </tr>
+    <tr>
+        <td>7.</td>
+        <td><a href="#" onclick="toggleDepositForm()">Deposit to Bank Accounts</a></td>
+    </tr>
+    <tr>
+        <td>8.</td>
+        <td><a href="#" onclick="toggleWithdrawForm()">Withdrawing from Bank Accounts</a></td>
+    </tr>
+    <tr>
+        <td>9.</td>
+        <td><a href="#" onclick="toggleTransferForm()">Transfer Between Bank Accounts</a></td>
+    </tr>
+    <tr>
+        <td>10.</td>
+        <td><a href="{{ url_for('transactions') }}">Transactions for All Accounts</a></td>
+    </tr>
+
+</table>
+
+<!-- Всплывающее окно для добавления нового пользователя -->
+<div id="overlay"></div>
+<div id="addUserForm">
+    <h2>Add New User</h2>
+    <form id="userForm" onsubmit="addUser(); return false;">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+        <br>
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" required>
+        <br>
+        <input type="submit" value="Add User">
+    </form>
+    <button onclick="closeAddUserForm()">Close</button>
+</div>
+
+<script>
+    function toggleAddUserForm() {
+        var overlay = document.getElementById('overlay');
+        var addUserForm = document.getElementById('addUserForm');
+        overlay.style.display = 'block';
+        addUserForm.style.display = 'block';
+    }
+
+    function closeAddUserForm() {
+        var overlay = document.getElementById('overlay');
+        var addUserForm = document.getElementById('addUserForm');
+        overlay.style.display = 'none';
+        addUserForm.style.display = 'none';
+    }
+
+    function addUser() {
+        // Получение данных из формы
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        var userId = document.getElementById('userId').value;
+
+        // Отправка данных на сервер с использованием
+        fetch('/add_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `username=${username}&password=${password}&userId=${userId}`,
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            closeAddUserForm();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+
+<!-- Всплывающее окно удаления пользователя -->
+<div id="deleteUserOverlay"></div>
+<div id="deleteUserForm">
+    <h2>Delete User</h2>
+    <form id="deleteUserInnerForm" onsubmit="deleteUser(); return false;">
+        <label for="user_id">User ID:</label>
+        <input type="text" id="delete_user_id" required>
+        <br>
+        <input type="submit" value="Delete User">
+    </form>
+    <button onclick="closeDeleteUserForm()">Close</button>
+</div>
+
+<script>
+    function toggleDeleteUserForm() {
+        var deleteUserOverlay = document.getElementById('deleteUserOverlay');
+        var deleteUserForm = document.getElementById('deleteUserForm');
+        deleteUserOverlay.style.display = 'block';
+        deleteUserForm.style.display = 'block';
+    }
+
+    function closeDeleteUserForm() {
+        var deleteUserOverlay = document.getElementById('deleteUserOverlay');
+        var deleteUserForm = document.getElementById('deleteUserForm');
+        deleteUserOverlay.style.display = 'none';
+        deleteUserForm.style.display = 'none';
+    }
+
+    function deleteUser() {
+        // Получение данных из формы
+        var userId = document.getElementById('delete_user_id').value;
+
+        // Отправка данных на сервер с использованием fetch
+        fetch('/delete_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `user_id=${userId}`,
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            closeDeleteUserForm();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+
+<!-- Всплывающее окно для создания банковского счета -->
+<div id="createAccountOverlay"></div>
+<div id="createAccountForm">
+    <h2>Create Account</h2>
+    <form id="accountForm" action="/create_account" method="post">
+        <label for="user_id">User ID:</label>
+        <input type="text" id="user_id" name="user_id" required>
+        <br>
+        <label for="accounts">Accounts:</label>
+        <input type="text" id="accounts" name="accounts" required>
+        <br>
+        <label for="amount">Amount:</label>
+        <input type="text" id="amount" name="amount" required>
+        <br>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="True">Active</option>
+            <option value="False">Inactive</option>
+        </select>
+        <br>
+        <input type="submit" value="Create Account">
+    </form>
+    <button onclick="closeCreateAccountForm()">Close</button>
+</div>
+
+<script>
+    function toggleCreateAccountForm() {
+        var createAccountOverlay = document.getElementById('createAccountOverlay');
+        var createAccountForm = document.getElementById('createAccountForm');
+        createAccountOverlay.style.display = 'block';
+        createAccountForm.style.display = 'block';
+    }
+
+    function closeCreateAccountForm() {
+        var createAccountOverlay = document.getElementById('createAccountOverlay');
+        var createAccountForm = document.getElementById('createAccountForm');
+        createAccountOverlay.style.display = 'none';
+        createAccountForm.style.display = 'none';
+    }
+
+    function createAccount() {
+        var userId = document.getElementById('user_id').value;
+        var accounts = document.getElementById('accounts').value;
+        var amount = document.getElementById('amount').value;
+        var status = document.getElementById('status').value;
+
+        alert("Банковский счет создан успешно!\nUser ID: " + userId + "\nAccounts: " + accounts + "\nAmount: " + amount + "\nStatus: " + status);
+        closeCreateAccountForm();
+    }
+</script>
+
+<!-- Всплывающее окно для удаления банковского счета -->
+<div id="deleteAccountOverlay"></div>
+<div id="deleteAccountForm">
+    <h2>Delete Bank Account</h2>
+    <form id="deleteAccountInnerForm" onsubmit="deleteAccount(); return false;">
+        <label for="account_id">Account ID:</label>
+        <input type="text" id="delete_account_id" required>
+        <br>
+        <input type="submit" value="Delete Account">
+    </form>
+    <button onclick="closeDeleteAccountForm()">Close</button>
+</div>
+<script>
+    function toggleDeleteAccountForm() {
+        var deleteAccountOverlay = document.getElementById('deleteAccountOverlay');
+        var deleteAccountForm = document.getElementById('deleteAccountForm');
+        deleteAccountOverlay.style.display = 'block';
+        deleteAccountForm.style.display = 'block';
+    }
+
+    function closeDeleteAccountForm() {
+        var deleteAccountOverlay = document.getElementById('deleteAccountOverlay');
+        var deleteAccountForm = document.getElementById('deleteAccountForm');
+        deleteAccountOverlay.style.display = 'none';
+        deleteAccountForm.style.display = 'none';
+    }
+
+    function deleteAccount() {
+        // Получение данных из формы
+        var accountId = document.getElementById('delete_account_id').value;
+
+        // Отправка данных на сервер с использованием
+        fetch('/delete_account', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${accountId}`,
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            closeDeleteAccountForm();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<!-- Всплывающее окно для пополнения банковского счета -->
+<div id="depositFormOverlay"></div>
+<div id="depositForm">
+    <h2>Deposit to Bank Account</h2>
+    <form id="depositInnerForm" onsubmit="depositAccount(); return false;">
+        <label for="depositDescription">Description:</label>
+        <input type="text" id="depositDescription" required>
+        <br>
+        <label for="depositAccountId">Account ID (ID счета):</label>
+        <input type="text" id="depositAccountId" required>
+        <br>
+        <label for="depositAmount">Amount:</label>
+        <input type="text" id="depositAmount" required>
+        <br>
+        <input type="submit" value="Top up">
+    </form>
+    <button onclick="closeDepositForm()">Close</button>
+</div>
+
+<script>
+    function toggleDepositForm(accountId, description) {
+        var depositFormOverlay = document.getElementById('depositFormOverlay');
+        var depositForm = document.getElementById('depositForm');
+
+        // Убедимся, что все необходимые элементы существуют
+        var depositAccountIdInput = document.getElementById('depositAccountId');
+        var depositDescriptionInput = document.getElementById('depositDescription');
+        var depositAmountInput = document.getElementById('depositAmount');
+
+        if (depositFormOverlay && depositForm && depositAccountIdInput && depositDescriptionInput && depositAmountInput) {
+            depositFormOverlay.style.display = 'block';
+            depositForm.style.display = 'block';
+
+
+            depositAccountIdInput.value = accountId;
+            depositDescriptionInput.value = description;
+            depositAmountInput.value = '';
+        } else {
+            console.error('Error: One or more required elements not found.');
+        }
+    }
+
+    function closeDepositForm() {
+        var depositFormOverlay = document.getElementById('depositFormOverlay');
+        var depositForm = document.getElementById('depositForm');
+
+        if (depositFormOverlay && depositForm) {
+            depositFormOverlay.style.display = 'none';
+            depositForm.style.display = 'none';
+        } else {
+            console.error('Error: One or more required elements not found.');
+        }
+    }
+
+    function depositAccount() {
+
+        var accountId = document.getElementById('depositAccountId').value;
+        var description = document.getElementById('depositDescription').value;
+        var amount = document.getElementById('depositAmount').value;
+
+
+        fetch('/deposit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                description: description,
+                accountId: accountId,
+                amount: amount,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            closeDepositForm();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<!-- Всплывающее окно для снятия средств с банковского счета -->
+<div id="withdrawFormOverlay"></div>
+<div id="withdrawForm">
+    <h2>Withdrawing from Bank Accounts</h2>
+    <form id="withdrawInnerForm" onsubmit="withdrawAccount(); return false;">
+        <label for="withdrawDescription">Description:</label>
+        <input type="text" id="withdrawDescription" required>
+        <br>
+        <label for="withdrawAccountId">Account ID (ID счета):</label>
+        <input type="text" id="withdrawAccountId" required>
+        <br>
+        <label for="withdrawAmount">Amount:</label>
+        <input type="text" id="withdrawAmount" required>
+        <br>
+        <input type="submit" value="Withdraw">
+    </form>
+    <button onclick="closeWithdrawForm()">Close</button>
+</div>
+
+<script>
+    function toggleWithdrawForm(accountId, description) {
+        var withdrawFormOverlay = document.getElementById('withdrawFormOverlay');
+        var withdrawForm = document.getElementById('withdrawForm');
+
+        // Убедимся, что все необходимые элементы существуют
+        var withdrawAccountIdInput = document.getElementById('withdrawAccountId');
+        var withdrawDescriptionInput = document.getElementById('withdrawDescription');
+        var withdrawAmountInput = document.getElementById('withdrawAmount');
+
+        if (withdrawFormOverlay && withdrawForm && withdrawAccountIdInput && withdrawDescriptionInput && withdrawAmountInput) {
+            withdrawFormOverlay.style.display = 'block';
+            withdrawForm.style.display = 'block';
+
+            // Заполним поля значениями
+            withdrawAccountIdInput.value = accountId;
+            withdrawDescriptionInput.value = description;
+            withdrawAmountInput.value = '';  // Оставим поле суммы пустым при открытии окна
+        } else {
+            console.error('Error: One or more required elements not found.');
+        }
+    }
+
+    function closeWithdrawForm() {
+        var withdrawFormOverlay = document.getElementById('withdrawFormOverlay');
+        var withdrawForm = document.getElementById('withdrawForm');
+
+        if (withdrawFormOverlay && withdrawForm) {
+            withdrawFormOverlay.style.display = 'none';
+            withdrawForm.style.display = 'none';
+        } else {
+            console.error('Error: One or more required elements not found.');
+        }
+    }
+
+    function withdrawAccount() {
+        // Получение данных из формы
+        var accountId = document.getElementById('withdrawAccountId').value;
+        var description = document.getElementById('withdrawDescription').value;
+        var amount = document.getElementById('withdrawAmount').value;
+
+        // Отправка данных на сервер
+        fetch('/withdraw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                description: description,
+                accountId: accountId,
+                amount: amount,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            closeWithdrawForm();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<!-- Всплывающее окно для трансфера между банковскими счетами -->
+<div id="transferFormOverlay"></div>
+<div id="transferForm">
+    <h2>Transfer Between Bank Accounts</h2>
+    <form id="transferInnerForm">
+        <label for="fromAccountId">Sender (Account ID):</label>
+        <input type="text" id="fromAccountId" required>
+        <br>
+        <label for="toAccountId">Recipient (Account ID):</label>
+        <input type="text" id="toAccountId" required>
+        <br>
+        <label for="transferDescription">Description:</label>
+        <input type="text" id="transferDescription" required>
+        <br>
+        <label for="transferAmount">Amount:</label>
+        <input type="text" id="transferAmount" required>
+        <br>
+        <input type="button" value="Transfers" onclick="testTransfer()">
+    </form>
+    <button onclick="closeTransferForm()">Close</button>
+</div>
+
+<script>
+    function toggleTransferForm(fromAccountId, toAccountId, description) {
+        var transferFormOverlay = document.getElementById('transferFormOverlay');
+        var transferForm = document.getElementById('transferForm');
+
+        var fromAccountIdInput = document.getElementById('fromAccountId');
+        var toAccountIdInput = document.getElementById('toAccountId');
+        var transferDescriptionInput = document.getElementById('transferDescription');
+        var transferAmountInput = document.getElementById('transferAmount');
+
+        if (transferFormOverlay && transferForm && fromAccountIdInput && toAccountIdInput && transferDescriptionInput && transferAmountInput) {
+            transferFormOverlay.style.display = 'block';
+            transferForm.style.display = 'block';
+
+            fromAccountIdInputValue = fromAccountId;
+            toAccountIdInput.Value = toAccountId;
+            transferDescriptionInput.Value = description;
+            transferAmountInput.Value = '';
+        } else {
+            console.error('Error: One or more required elements not found.');
+        }
+    }
+
+    function closeTransferForm() {
+        var transferFormOverlay = document.getElementById('transferFormOverlay');
+        var transferForm = document.getElementById('transferForm');
+
+        if (transferFormOverlay && transferForm) {
+            transferFormOverlay.style.display = 'none';
+            transferForm.style.display = 'none';
+        } else {
+            console.error('Error: One or more required elements not found.');
+        }
+    }
+
+    function testTransfer() {
+        var fromAccountId = document.getElementById('fromAccountId').value;
+        var toAccountId = document.getElementById('toAccountId').value;
+        var description = document.getElementById('transferDescription').value;
+        var amount = document.getElementById('transferAmount').value;
+
+        fetch('/transfer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fromAccountId: fromAccountId,
+                toAccountId: toAccountId,
+                description: description,
+                amount: amount,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            closeTransferForm();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+CREATE TABLE users
+(
+    id       SERIAL PRIMARY KEY NOT NULL,
+    username VARCHAR(50),
+    password varchar(255)
+);
+
+
+ALTER TABLE users
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+INSERT INTO users (id, username, password)
+VALUES (1, 'User1', 'pass1'),
+       (2, 'User2', 'pass2'),
+       (3, 'User3', 'pass3'),
+       (4, 'User4', 'pass4'),
+       (5, 'User5', 'pass5')
+
+
+INSERT INTO users (id, username, password)
+VALUES (11, 'User13', 'pass13');
+
+
+CREATE TABLE bank_accounts
+(
+    id       SERIAL PRIMARY KEY            NOT NULL,
+    user_id  INTEGER REFERENCES users (id) NOT NULL,
+    accounts VARCHAR(20),
+    amount   DECIMAL(20, 2),
+    status   BOOLEAN DEFAULT TRUE
+);
+
+ALTER TABLE bank_accounts
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
+INSERT INTO bank_accounts (user_id, accounts, amount)
+VALUES (1, 'acc12345', '10000'),
+       (2, 'acc12346', '10000'),
+       (3, 'acc12347', '10000'),
+       (4, 'acc12235', '10000'),
+       (5, 'acc12365', '10000'),
+       (5, 'acc12376', '10000'),
+       (4, 'acc12353', '10000'),
+       (2, 'acc12367', '10000'),
+       (1, 'acc12387', '10000'),
+       (2, 'acc12378', '10000');
+
+
+select * from bank_accounts;
+
+
+
+CREATE TABLE transactions
+(
+    id          SERIAL PRIMARY KEY            NOT NULL,
+    account_id  INTEGER REFERENCES bank_accounts (id) NOT NULL,
+    operation   VARCHAR(20) NOT NULL,
+    amount      DECIMAL(20, 2) NOT NULL,
+    timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE transactions
+ALTER COLUMN operation TYPE VARCHAR(2000),
+ALTER COLUMN amount TYPE DECIMAL(1000, 2);
+
+
+ALTER TABLE transactions
+ALTER COLUMN operation TYPE VARCHAR(2000),
+
+
+DELETE FROM users;
